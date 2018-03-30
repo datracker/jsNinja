@@ -45,4 +45,77 @@ obj.prop = "some value";
 fn.prop = "some value";
 assert(obj.prop == fn.prop, "Both are objects, both have the property.");
 
+//Examining context within a function.
+var katana = {
+	isSharp: true,
+	use: function() {
+		this.isSharp = !this.isSharp;
+	}
+};
+katana.use();
+assert(!katana.isSharp, "Verifying the value od isSharp is changed");
+
+//What context refers to within a function.
+function katana2() {
+	this.isSharp2 = true;
+}
+katana2();
+assert(isSharp2 === true, "A global object now exists with that name and value");
+
+var shuriken = {
+	toss: function() {
+		this.isSharp2 = false;
+	}
+};
+shuriken.toss();
+assert(isSharp2 === true, "It's an object property, the value is set within the object");
+
+//Modifying the context of a function, when call.
+var object = {};
+function fn(){
+	return this;
+}
+//assert( fn() == this, "The context is the global object." );
+//assert( fn.call(object) == object, "The context is changed to a specific object." );
+
+// Two methods of modifying a function's context
+function sub(a, b) {
+	return a - b;
+}
+//console.log(sub.call(this, 2, 3));
+//console.log(sub.apply(this, [3, 2]));
+assert(sub.call(this, 1, 2) == -1, ".call() takes individual arguments");
+assert(sub.apply(this, [1, 2]) == -1, ".apply() takes an array of arguments");
+
+//Looping with a function callback.
+function loop(array, fn) {
+	for (var i = 0; i < array.length; i++) {
+		if(fn.call(array, array[i], i) === false)
+			break;
+	}
+}
+var num = 0;
+loop([0,1,2], function(value, i) {
+	assert(value == num++, "Make sure the contents are as we expect it.");
+})
+
 //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

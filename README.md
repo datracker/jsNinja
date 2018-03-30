@@ -1,5 +1,5 @@
 # jsNinja
-#### Notes and exercises from Secrets of the JavaScript Ninja-John Resig book
+#### Notes from Secrets of the JavaScript Ninja-John Resig book
 
 ## Chapter-1: Introduction
 - First: We will extensively use assert() and also test codes that execute asynchronously.
@@ -111,9 +111,73 @@ assert( isPrime.answers[5], "Make sure the answer is cached" );
 ```
 
 ### Context
+- Understanding Context is very cruicial to write great JS code.
+- Function context: The object within which the function is being executed. For example, defining a function inside an object structure will ensure that the context always refers to that object.
+- By having an implicit 'this' variable be included within every function it gives you great flexibility for how the function can be called and executed.
+```javascript
+var katana = {
+  isSharp: true,
+  use: function() {
+	this.isSharp = !this.isSharp;
+  }
+};
+katana.use();
+assert(!katana.isSharp, "Verifying the value od isSharp is changed");
+```
+But if a function that wasn't declared as a property of on object, then the function's context refer to a global object. If there's no global objet with that name, JS creates one for that function.
+```javascript
+function katana2() {
+	this.isSharp2 = true;
+}
+katana2();
+assert(isSharp2 === true, "A global object now exists with that name and value");
+
+var shuriken = {
+  toss: function() {
+    this.isSharp2 = false;
+  }
+};
+shuriken.toss();
+assert(isSharp2 === true, "It's an object property, the value is set within the object");
+```
+Inside a function 'this' refers to an empty object in Node.js, and when used with 'use strict' in browser side, it also refers to en empty object. Otherwise the following code works(only in browser side, w/o 'use strict')
+```javascript
+var object = {};
+function fn(){
+  return this;
+}
+assert( fn() == this, "The context is the global object." );
+assert( fn.call(object) == object, "The context is changed to a specific object." );
+```
+JS provides two methods: call and apply. These can be used to call the function, define its context, and specify its incoming arguments.  Simply, .call() passes in arguments individually whereas .apply()
+passes in arguments as an array.
+```javascript
+function sub(a, b) {
+  return a - b;
+}
+console.log(sub.call(this, 2, 3));
+console.log(sub.apply(this, [3, 2]));
+assert(sub.call(this, 1, 2) == 3, ".call() takes individual arguments");
+assert(sub.apply(this, [1, 2]) == 3, ".apply() takes an array of arguments");
+```
 
 #### Looping
+To loop an array and use a callback function for each member of the array. Much like the map/filter function. We can see how we use .call() method tin the callback function.
+```javascript
+function loop(array, fn) {
+  for (var i = 0; i < array.length; i++) {
+	if(fn.call(array, array[i], i) === false)
+	  break;
+  }
+}
+var num = 0;
+loop([0,1,2], function(value, i) {
+  assert(value == num++, "Make sure the contents are as we expect it.");
+})
+```
+
 #### Fake Array Methods
+
 
 ### Variable Arguments
 #### Min/Max Number in an Array
