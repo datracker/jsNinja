@@ -99,9 +99,16 @@ loop([0,1,2], function(value, i) {
 	assert(value == num++, "Make sure the contents are as we expect it.");
 })
 
-//Simulating array-like methods
-<input id="first" />
-<input id="second" />
+//Finding Max/Min in an array without going through all the elements, 
+//Using Math object, and it's built-in methods instead
+function smallest(array) {
+	return Math.min.apply(Math, array);
+}
+function largest(array) {
+	return Math.max.apply(Math, array);
+}
+assert(smallest([0,1,2,3]) == 0, "Locate the smallest value.");
+assert(largest([0,1,2,3]) == 3, "Locate the largest value.");
 
 
 

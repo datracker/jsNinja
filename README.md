@@ -166,7 +166,7 @@ To loop an array and use a callback function for each member of the array. Much 
 ```javascript
 function loop(array, fn) {
   for (var i = 0; i < array.length; i++) {
-	if(fn.call(array, array[i], i) === false)
+  	if(fn.call(array, array[i], i) === false)
 	  break;
   }
 }
@@ -181,7 +181,7 @@ loop([0,1,2], function(value, i) {
 - Array.prototype property represents the prototype for the Array constructor and allows you to add new properties and methods for an Array object.
 Now if we want to make an object iterable(array-like), we need to do this(see the following code). The elems object became iterable, when we used Array.prototype.push to push an elem. Array.prototype is the prototype for Array object. So, when we pass the "this" keyword as an argument, the Array.prototype understands the current context of this object(which is elems object in this example), and make this object array-like. We see that, the length property is modified, and a new numbered property will exist containing the added item.
 
-```
+```javascript
 <input id="first"/>
 <input id="second"/>
 
@@ -189,10 +189,10 @@ Now if we want to make an object iterable(array-like), we need to do this(see th
 var elems = {
   length: 0,
   find: function(id) {
-  	this.add( getElementById(id) );
+    this.add( getElementById(id) );
   },
   add: function(elem) {
-  	Array.prototype.push.call(this, elem);
+    Array.prototype.push.call(this, elem);
   }
 }
 
@@ -208,7 +208,19 @@ console.log(elems[1].add("third")); //error, add is not defined
 ```
 
 ### Variable Arguments
+
 #### Min/Max Number in an Array
+JS array doesn't have the max/min method by default. We can create these two methods. To find the Min/Max array we don't really have to iterate through all the elements. Because, we can use the built-in Math object is JS. The built-in Math object has min/max methods which takes any number of arguments. We use apply() method to pass an arbitrary size array.
+```javascript
+function smallest(array) {
+  return Math.min.apply(Math, array);
+}
+function largest(array) {
+  return Math.max.apply(Math, array);
+}
+assert(smallest([0,1,2,3]) == 0, "Locate the smallest value.");
+assert(largest([0,1,2,3]) == 3, "Locate the largest value.");
+```
 #### Function Overloading
 #### Function Length
 
