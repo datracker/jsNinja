@@ -177,7 +177,35 @@ loop([0,1,2], function(value, i) {
 ```
 
 #### Fake Array Methods
+- Objects in JS typically inherit properties and methods from Object.prototype, although these properties and methods can be overwritten.
+- Array.prototype property represents the prototype for the Array constructor and allows you to add new properties and methods for an Array object.
+Now if we want to make an object iterable(array-like), we need to do this(see the following code). The elems object became iterable, when we used Array.prototype.push to push an elem. Array.prototype is the prototype for Array object. So, when we pass the "this" keyword as an argument, the Array.prototype understands the current context of this object(which is elems object in this example), and make this object array-like. We see that, the length property is modified, and a new numbered property will exist containing the added item.
 
+```
+<input id="first"/>
+<input id="second"/>
+
+<script>
+var elems = {
+  length: 0,
+  find: function(id) {
+  	this.add( getElementById(id) );
+  },
+  add: function(elem) {
+  	Array.prototype.push.call(this, elem);
+  }
+}
+
+console.log(elems.length); //0
+console.log(elems[0]); //undefined
+elems.add("first"); 
+console.log(elems.length); //1
+console.log(elems[0]); //first
+elems.add("second");
+console.log(elems.length); //2
+console.log(elems[1].add("third")); //error, add is not defined
+</script>
+```
 
 ### Variable Arguments
 #### Min/Max Number in an Array

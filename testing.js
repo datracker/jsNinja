@@ -99,7 +99,9 @@ loop([0,1,2], function(value, i) {
 	assert(value == num++, "Make sure the contents are as we expect it.");
 })
 
-//
+//Simulating array-like methods
+<input id="first" />
+<input id="second" />
 
 
 
