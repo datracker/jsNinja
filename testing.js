@@ -110,11 +110,31 @@ function largest(array) {
 assert(smallest([0,1,2,3]) == 0, "Locate the smallest value.");
 assert(largest([0,1,2,3]) == 3, "Locate the largest value.");
 
+//Changing function actions based upon the arguments.
+function merge(root) {
+	for (var i = 0; i < arguments.length; i++)
+		for (var key in arguments[i])
+			root[key] = arguments[i][key];
+	return root;
+}
+var merged = merge( {name: "John"}, {city: "Reno"}, {ls: [1, 2, 3]} );
+assert(merged.name === "John", "The original name is intact.");
+assert(merged.city === "Reno", "And the city has been copied over.");
+//Doesn't work. Can't compare objects using ===. You have to write a function for that.
+//assert(merged.ls === [ 1, 2, 3 ], "And the list has been copied over."); 
 
+//Handling a variable number of function arguments.
+function multiMax(multi) {
+	//multi refers only to the first argument
+	//arguments variable isn't a regular Array object, so we add the slice method from
+	//the Array prototype
+	return multi * Math.max.apply(
+		Math, Array.prototype.slice.call(arguments, 1));
+}
+//console.log(multiMax(2,2,3,4));
+assert( multiMax(3, 1, 2, 3) == 9, "3*3=9 (First arg, by largest.)" );
 
-
-
-
+//
 
 
 
