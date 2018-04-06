@@ -14,12 +14,10 @@ console.log(function() {
 //Created a module HTMLChanger which hides everything excepts the callChangeHTML method.
 var HTMLChanger = (function() {
 	var contents = 'content';
-
 	var changeHTML = function () {
 		//var element = document.getElementById('root');
 		//element.innerHTML = contents;
 	}
-
 	return {
 		callChangeHTML: function() {
 			changeHTML();
@@ -27,7 +25,6 @@ var HTMLChanger = (function() {
 		}
 	}
 }());
-
 HTMLChanger.callChangeHTML(); //contents
 console.log(HTMLChanger.contents); //undefined
 
@@ -50,7 +47,6 @@ var Exposer = (function() {
 	}
 
 }());
-
 Exposer.first(); //gets output
 Exposer.second(); //gets output
 //Exposer.methodToExpose(); //deosn't know this function. No output
