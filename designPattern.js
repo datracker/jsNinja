@@ -52,9 +52,47 @@ Exposer.second(); //gets output
 //Exposer.methodToExpose(); //deosn't know this function. No output
 
 
-
 /*
 *
 */
 
+//Prototype pattern example
+var TeslaModelS = function() {
+    this.wheels = 4;
+    this.maker = 'Tesla';
+    this.model = 'S'
+}
+var car1 = new TeslaModelS();
+console.log(car1.go); //undefined
+TeslaModelS.prototype.go = function() {
+    console.log('runs fast');
+}
+TeslaModelS.prototype.stop = function() {
+    console.log('breaks hard');
+}
+var car = new TeslaModelS();
+console.log(car.maker); //Tesla
+car.stop(); //breaks hard
+car1.go(); //runs fast
 
+//Revealing Prototype Pattern
+var TeslaModelS = function() {
+    this.wheels = 4;
+    this.maker = 'Tesla';
+    this.model = 'S'
+}
+TeslaModelS.prototype = (function() {
+    var go = function() {
+        console.log('runs fast');
+    }
+    var stop = function() {
+        console.log('breaks hard');
+    }
+    return {
+        pressBreakPedal: stop,
+        pressGasPedal: go
+    }
+}());
+var car2 = new TeslaModelS();
+//car2.stop(); //undefined, not a function
+car2.pressBreakPedal(); //breaks hard
