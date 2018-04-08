@@ -161,8 +161,20 @@ subject.notifyObserver(observer2); // Observer 2 is notified!
 subject.notifyAllObservers();
 
 /*
-*
+* Singleton design pattern is used to create only one instance of a prototype or class.
+* That one instance is used several times throughout the application. Singleton pattern 
+* prohibits creating multiple instances of the same class/prototype. 
+* Example: We create a single instance of an app from Express() and a single instance
+* to access the database.
 */
+
+var express = require('express');
+var app = express(); //creates a single instance of express
+
+var mongoose = require('mongoose');
+var mongoDB = 'mongodb://<mongodb URI>';
+mongoose.connect(mongoDB);
+var db = mongoose.connection; //single instance of database
 
 
 
