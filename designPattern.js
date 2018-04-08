@@ -53,7 +53,8 @@ Exposer.second(); //gets output
 
 
 /*
-*
+* Every object is JS has prototype. You can add functionality to an object by using the
+* prototype keyword.
 */
 
 //Prototype pattern example
@@ -96,3 +97,118 @@ TeslaModelS.prototype = (function() {
 var car2 = new TeslaModelS();
 //car2.stop(); //undefined, not a function
 car2.pressBreakPedal(); //breaks hard
+
+
+/*
+* The Observer is a design pattern where an object (known as a subject) maintains a list of objects 
+* depending on it (observers), automatically notifying them of any changes to state. When a subject 
+* needs to notify observers about something interesting happening, it broadcasts a notification to 
+* the observers (which can include specific data related to the topic of the notification). 
+* When we no longer wish for a particular observer to be notified of changes by the subject they are 
+* registered with, the subject can remove them from the list of observers.
+* 
+* The Publish/Subscribe pattern, however, uses a topic/event channel that sits between the objects 
+* wishing to receive notifications (subscribers) and the object firing the event (the publisher). 
+* The idea here is to avoid dependencies between the subscriber and publisher. This differs from 
+* the Observer pattern since any subscriber implementing an appropriate event handler to register 
+* for and receive topic notifications broadcast by the publisher.
+*/
+
+var Subject = function() {
+    const observers = [];
+    return {
+        subscribeObserver: function(observer) {
+            observers.push(observer);
+        },
+        unsubscribeObserver: function(observer) {
+            var index = observers.indexOf(observer);
+            if(index > -1) {
+                observers.splice(index, 1);
+            }
+        },
+        notifyObserver: function(observer) {
+            var index = observers.indexOf(observer);
+            if(index > -1) {
+                observers[index].notify(index);
+            }
+        },
+        notifyAllObservers: function() {
+            for(var i = 0; i < observers.length; i++){
+                observers[i].notify(i);
+            }
+        }
+    };
+}
+var Observer = function() {
+  return {
+    notify: function(index) {
+      console.log("Observer " + index + " is notified!");
+    }
+  }
+}
+var subject = new Subject();
+var observer1 = new Observer();
+var observer2 = new Observer();
+var observer3 = new Observer();
+var observer4 = new Observer();
+
+subject.subscribeObserver(observer1);
+subject.subscribeObserver(observer2);
+subject.subscribeObserver(observer3);
+subject.subscribeObserver(observer4);
+
+subject.notifyObserver(observer2); // Observer 2 is notified!
+subject.notifyAllObservers();
+
+/*
+*
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
