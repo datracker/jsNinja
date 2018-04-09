@@ -257,7 +257,95 @@ assert( multiMax(3, 1, 2, 3) == 9, "3*3=9 (First arg, by largest.)" );
 
 
 ## Chapter-4: Closures
+### From a blog site
+A closure is a inner function that has access to its outer function's variables and parameters.
+The closure has three scope chains: it has access to its own scope (variables defined between its curly brackets), it has access to the outer function’s variables, and it has access to the global variables.
+```javascript
+//Example of a simple closure
+function showName(firstName, lastName) {
+  var nameIntro = 'Your name is ';
+  function makeFullname() {
+    return nameIntro + firstName + ' ' + lastName;
+  }
+  return makeFullname();
+}
+assert(showName('Mike', 'Jackson') == "Your name is Mike Jackson", "Simple Closure");
+```
+#### Closures' Rules and Side Effects
+- Closures have access to the outer function’s variable even after the outer function returns:
+```javascript
+function fullName(firstName) {
+  var nameIntro = 'The name is ';
+  function getLastName(lastName) {
+    return nameIntro + firstName + ' ' + lastName;
+  }
+  return getLastName; //returns the function unexecuted
+}
 
+var celebName = fullName('Shakib'); //Now celebName is referencing to the getLastName function
+assert(celebName('Al-Hasan') == 'The name is Shakib Al-Hasan', 'closures Keeping variables after return');
+```
+
+- Closures store references to the outer function’s variables, they do not store the actual value. Closures get more interesting when the value of the outer function’s variable changes before the closure is called. 
+```javascript
+//Closures store references to the outer function’s variables
+function celebID() {
+  var idNum = 999;
+  return {
+    getID: function() {
+      return idNum;
+    },
+    setID: function(newID) {
+      idNum = newID;
+    }
+  }
+}
+var mjID = celebID();
+assert(mjID.getID() === 999, 'Did not return current ID');
+mjID.setID(123);
+assert(mjID.getID() === 123, 'Did not return updated ID');
+```
+- Closures gone awry. 
+```javascript
+//Closures Gone Awry
+function celebIdCreator(celebs) {
+  var uniqID = 100;
+  for (var i = 0; i < celebs.length; i++) {
+    celebs[i].id = function() {
+      return uniqID + i;
+    }
+  }
+  return celebs;
+}
+var actionCelebs = [{name:"Stallone", id:0}, {name:"Cruise", id:0}, {name:"Willis", id:0}];
+//id is now pointing to a function which is not executed yet. 
+//By the time the anonymous functions are called, the value of i is 3 
+var actioncelebsIds = celebIdCreator(actionCelebs); 
+console.log(actioncelebsIds[0].id()) // 103
+console.log(actioncelebsIds[1].id()) // 103
+console.log(actioncelebsIds[2].id()) // 103
+```
+In the preceding example, by the time the anonymous functions are called, the value of i is 3 (the length of the array and then it increments). The number 3 was added to the uniqueID to create 103 for ALL the celebritiesID. So every position in the returned array get id = 103, instead of the intended 100, 101, 102.
+The reason this happened was because, as we have discussed in the previous example, the closure (the anonymous function in this example) has access to the outer function’s variables by reference, not by value. So just as the previous example showed that we can access the updated variable with the closure, this example similarly accessed the i variable when it was changed, since the outer function runs the entire for loop and returns the last value of i, which is 103.
+To fix this side effect (bug) in closures, you can use an Immediately Invoked Function Expression (IIFE), such as the following:
+```javascript
+//Fixed bug for the previous example using Immediately Invoked Function Expression (IIFE)
+function celebIdCreator2(celebs) {
+  var uID = 100;
+  for (var i = 0; i < celebs.length; i++) {
+    celebs[i].id = function() {
+      return uID + i;
+    }();
+  }
+  return celebs;
+}
+var actionCelebs2 = [{name:"Sakib", id:0}, {name:"Manna", id:0}, {name:"Josim", id:0}];
+var actioncelebsIds2 = celebIdCreator2(actionCelebs2);
+//id function is already invoked by IIFE
+assert(actioncelebsIds2[0].id === 100, 'The output is 100, should be 100');
+assert(actioncelebsIds2[1].id === 101, 'The output is 101, should be 101');
+assert(actioncelebsIds2[2].id === 102, 'The output is 102, should be 102');
+```
 
 
 

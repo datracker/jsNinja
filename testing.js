@@ -134,7 +134,95 @@ function multiMax(multi) {
 //console.log(multiMax(2,2,3,4));
 assert( multiMax(3, 1, 2, 3) == 9, "3*3=9 (First arg, by largest.)" );
 
-//
+//Simple Closure
+function showName(firstName, lastName) {
+	var nameIntro = 'Your name is ';
+	function makeFullname() {
+		return nameIntro + firstName + ' ' + lastName;
+	}
+	return makeFullname();
+}
+assert(showName('Mike', 'Jackson') == "Your name is Mike Jackson", "Simple Closure");
+
+//Closures have access to the outer function’s variable even after the outer function returns
+function fullName(firstName) {
+	var nameIntro = 'The name is ';
+	function getLastName(lastName) {
+		return nameIntro + firstName + ' ' + lastName;
+	}
+	return getLastName; //returns the function unexecuted
+}
+
+var celebName = fullName('Shakib'); //Now celebName is referencing to the getLastName function
+assert(celebName('Al-Hasan') == 'The name is Shakib Al-Hasan', 'closures Keeping variables after return');
+
+//Closures store references to the outer function’s variables
+function celebID() {
+	var idNum = 999;
+	return {
+		getID: function() {
+			return idNum;
+		},
+		setID: function(newID) {
+			idNum = newID;
+		}
+	}
+}
+var mjID = celebID();
+assert(mjID.getID() === 999, 'Did not return current ID');
+mjID.setID(123);
+assert(mjID.getID() === 123, 'Did not return updated ID');
+
+//Closures Gone Awry
+function celebIdCreator(celebs) {
+	var uniqID = 100;
+	for (var i = 0; i < celebs.length; i++) {
+		celebs[i].id = function() {
+			return uniqID + i;
+		}
+	}
+	return celebs;
+}
+var actionCelebs = [{name:"Stallone", id:0}, {name:"Cruise", id:0}, {name:"Willis", id:0}];
+//id is now pointing to a function which is not executed yet. 
+//By the time the anonymous functions are called, the value of i is 3 
+var actioncelebsIds = celebIdCreator(actionCelebs); 
+assert(actioncelebsIds[0].id() === 103, 'The output is 103, should be 100');
+assert(actioncelebsIds[1].id() === 103, 'The output is 103, should be 100');
+assert(actioncelebsIds[2].id() === 103, 'The output is 103, should be 100');
+
+//Fixed bug for the previous example using Immediately Invoked Function Expression (IIFE)
+function celebIdCreator2(celebs) {
+	var uID = 100;
+	for (var i = 0; i < celebs.length; i++) {
+		celebs[i].id = function() {
+			return uID + i;
+		}();
+	}
+	return celebs;
+}
+var actionCelebs2 = [{name:"Sakib", id:0}, {name:"Manna", id:0}, {name:"Josim", id:0}];
+var actioncelebsIds2 = celebIdCreator2(actionCelebs2);
+//id function is already invoked by IIFE
+assert(actioncelebsIds2[0].id === 100, 'The output is 100, should be 100');
+assert(actioncelebsIds2[1].id === 101, 'The output is 101, should be 101');
+assert(actioncelebsIds2[2].id === 102, 'The output is 102, should be 102');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
